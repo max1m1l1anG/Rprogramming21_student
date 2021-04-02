@@ -3,8 +3,8 @@ title: "Lecture 4"
 author: "Misja Mikkers and Gertjan Verhoeven"
 subtitle: Markdown exercises
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 In this notebook we will exercise using Markdown to format our documents.
@@ -61,11 +61,18 @@ But it is also possible to add structure to the text:
 Now try to make a list of main points (1,2,3) and sub-points (3a, 3b) and knit to see the result.
 
 
+1. First main point
+2. Second main point
+3. Third main point
+  + First sub-point
+  + Second sub-point
+
+
 ### Text formatting
 
 **Exercise**:
 
-Make one word in this sentence bold.
+Make one word in this sentence **bold**.
 
 
 ### Tables
@@ -83,6 +90,12 @@ a. Copy this table
 b. Add a line with your own name
 c. Add a column with the title `Role` and fill in the roles after the names (valid roles are teacher, student, or teaching assistant)
 
+First name | Surname | Role |
+----------- | ------------ | ---------- |
+Gertjan | Verhoeven | Teacher |
+Misja | Mikkers | Teacher |
+Maximilian | Grotz | Student |
+
 
 ## Hyperlinks and images
 
@@ -92,7 +105,7 @@ c. Add a column with the title `Role` and fill in the roles after the names (val
 
 **Exercise**:
 
-Insert a hyperlink to the Tilburg University website.
+Insert a hyperlink to the [Tilburg University website](https://www.tilburguniversity.edu/).
 
 
 ### Pictures
@@ -102,9 +115,13 @@ Insert a hyperlink to the Tilburg University website.
 
 Insert the photo of Donald Knuth, the inventor of a predecessor of R Notebooks. The photo is in the images folder.
 
+![This is a picture of Donald Knuth](~/BSc Economics - TiU/Semester 2/Programming in R and Python/Assignments/R/Rprogramming21_student/Lecture_4/images/knuth.jpeg)
+
 ### Formulas
 
 Write this image as an inline formula:
+
+$a^2 + b^2 = c^2$
 
 ![](images/formula.png)
 
