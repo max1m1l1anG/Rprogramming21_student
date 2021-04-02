@@ -22,7 +22,8 @@ In package `dplyr` there are 5 _verbs_ that are really important:
 4. `summarise()` reduces certain groups in a single value
 5. `arrange()` changes the order of the observations
 
-If you want guidance or help, you can use google or [this website](http://genomicsclass.github.io/book/pages/dplyr_tutorial.html).
+If you want guidance or help, you can use google or [this website](
+).
 
 In this notebook we will manipulate to make some plots. However, there will be some assignments just to practice with the dplyr verbs. 
 
@@ -46,7 +47,9 @@ Please load the packages "tidyverse" en "gapminder". We also will use `ggrepel`
 
 ```{r}
 # Here your code
-
+library(gapminder)
+library(tidyverse)
+library(ggrepel)
 
 ```
 
@@ -90,7 +93,8 @@ Assignment:
 
 ```{r}
 # Here your code
-
+Countries <- c("Netherlands", "Belgium", "Germany", "France", "United Kingdom")
+df1 <- subset(gapminder, subset = country %in% Countries)
 
 ```
 
@@ -103,7 +107,9 @@ Now we can make a lineplot of df1 with year on the x-axis and lifeExp on the y-a
 
 ```{r}
 # Here your code
-
+ggplot() +
+  geom_line(data = df1, aes(x = year, y = lifeExp, color = country)) +
+  theme_classic()
 
 ```
 
@@ -156,7 +162,7 @@ Assignment:
 ```{r}
 
 # Here your code
-
+df2 <- df1 %>% mutate(Netherlands = as.factor(ifelse(country == "Netherlands", 1, 0)))
 
 ```
 
@@ -174,7 +180,13 @@ _hint_ : don't forget to add a nice theme.
 
 ```{r}
 # Here your code
-
+ggplot() +
+  geom_line(data = df2, aes(x = year, y = lifeExp, color = Netherlands, group = country, alpha = Netherlands)) +
+  xlab("Year") +
+  ylab("Life expectancy") +
+  scale_color_manual(values = c("0" = "grey", "1" = "orange"), name = "Country", labels = c("Not Netherlands", "Netherlands")) + 
+  scale_alpha_manual(values = c("1" = 1, "0" = 0.3)) +
+  guides(alpha = FALSE)
 
 ```
 
@@ -194,14 +206,18 @@ _hint_: check `?select` for help if needed.
 
 4. make a new column `ranking` by adding a vector 1:length(country)
 
-5. filter, so that you only keep the rows with raking 27 and 531 
+5. filter, so that you only keep the rows with ranking 27 and 531 
 
 
 
 ```{r}
 # Here your code
-
-
+df3 <- gapminder %>% 
+  select(contains("o") | year) %>% 
+  arrange(desc(pop)) %>% 
+  mutate(ranking = 1:length(country)) %>% 
+  filter(ranking %in% c(27, 531))
+df3
 ```
 
 
@@ -238,7 +254,10 @@ Assignment:
 
 ```{r}
 # Here your code
-
+df4 <- filter(gapminder, year == 2007) %>%
+  group_by(continent) %>%
+  summarise(Mean_LE = weighted.mean(lifeExp, pop), Mean_GDP = weighted.mean(gdpPercap, pop), .groups = "drop") %>%
+  arrange(desc(Mean_GDP))
 
 ```
 
@@ -262,7 +281,7 @@ Assignment: make a plot with df4 as seen below.
 ![](Plot1.png)
 
 
-_hint 1_: You may notice that despite the fact that we arranged the data in df4, your plot has a different order than the example above. `arrange()` does not carry over the plots. So in this case we had to reorder the y-axis on the plot as well. ?reorder might be helpfull.
+_hint 1_: You may notice that despite the fact that we arranged the data in df4, your plot has a different order than the example above. `arrange()` does not carry over the plots. So in this case we had to reorder the y-axis on the plot as well. ?reorder might be helpful.
 _hint 2_: We have different layers in the plot. 1 is `geom_point()`, the other is `geom_segment()`
 Check ?geom_segment or just google.
 _hint 3_: You need to change some labels. To get the line breaks in the legend, please google.
@@ -273,6 +292,10 @@ _hint 3_: You need to change some labels. To get the line breaks in the legend, 
 ```{r}
 # Here your code
 
+ggplot() +
+  geom_point(data = df4, aes(x = Mean_LE, y = reorder(continent, Mean_LE), size = Mean_GDP), color = "blue") + 
+  geom_segment(aes(x = 0, y = continent, xend = Mean_LE, yend = continent, group = continent), data = df4, color = "blue") +
+  labs(caption = "source: gapminder dataset", y = "", x = "Weighted mean of life expectancy", size = "Weighted mean \nof GDP\nper capita")
 
 ```
 
@@ -295,6 +318,24 @@ Hints:
 ```{r}
 # Here your code
 
+LabelCountries = c("Japan", "Spain", "Netherlands", "United States", "Chile", "Mexico", "China", "Pakistan", "India", "Guinea-Bissau", "Swaziland")
+FinalPlotData <- gapminder %>% 
+  filter(year == 2007)
+LabelData <- FinalPlotData[ FinalPlotData$country %in% LabelCountries, ]
+NoLabelData <- FinalPlotData[ ! FinalPlotData$country %in% LabelCountries, ]
+
+
+ggplot(data = LabelData, aes(x = gdpPercap, y = lifeExp, color = continent, size = pop)) +
+  geom_point(data = NoLabelData, aes(x = gdpPercap, y = lifeExp, color = continent, size = pop)) +
+  geom_point() +
+  geom_text_repel(aes(label = country), color = "black", size = 3, min.segment.length = unit(0, "lines"), nudge_y = .2) +
+  labs(x = "Log of GDP per capita", y = "Life expectancy", color = "Continent", size = "Population", caption = "source: Gapminder") +
+  scale_x_log10()
+
+
+  
+  
+  
 
 ```
 
