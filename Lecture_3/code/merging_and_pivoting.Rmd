@@ -19,7 +19,8 @@ Load these packages:
 
 ```{r}
 # Here your code
-
+library(tidyverse)
+library(readxl)
 ```
 
 
@@ -95,6 +96,9 @@ Try to do this and look at the result:
 
 ```{r}
 # Here your code
+data3_merged <- merge(data1, data2, by = "Hospital") 
+
+print(data3_merged)
 
 ```
 
@@ -112,7 +116,9 @@ Try `merged_dataframe <- full_join(your_first_data_frame, your_second_dataframe,
 
 ```{r}
 # Here your code
+data4_fulljoin <- full_join(data1, data2, by="Hospital")
 
+data4_fulljoin
 
 ```
 
@@ -127,6 +133,9 @@ Now try the command  `inner_join()` and inspect the results:
 
 ```{r}
 # Here your code
+data5_innerjoin <- inner_join(data1, data2, by="Hospital")
+
+data5_innerjoin
 
 ```
 
@@ -140,7 +149,9 @@ Inspect the results of `left_join()` and try to see what happens if you change t
 
 ```{r}
 # Here your code
+data6_leftjoin <- left_join(data1, data2, by="Hospital")
 
+data6_leftjoin
 
 ```
 
@@ -152,7 +163,9 @@ Try `right_join()` as the mirror of `left_join()` and inspect the result.
 
 ```{r}
 # Here your code
+data7_rightjoin <- right_join(data1, data2, by="Hospital")
 
+data7_rightjoin
 
 ```
 
@@ -169,7 +182,9 @@ Inspect the results of `anti_join()`
 
 ```{r}
 # Here your code
+data8_antijoin <- anti_join(data1, data2, by="Hospital")
 
+data8_antijoin
 
 ```
 
@@ -184,7 +199,9 @@ The `semi_join()` command returns all hospitals present in the first and the sec
 ```{r}
 
 # Here your code
+data9_semijoin <- semi_join(data1, data2, by="Hospital")
 
+data9_semijoin
 
 ```
 
@@ -212,7 +229,9 @@ And now try to use `name_of_your_merged_dataframe <- cbind(data1, data2a)`
 
 ```{r}
 # Here your code
+data1_2a_cbind <- cbind(data1, data2a)
 
+data1_2a_cbind
 
 ```
 
@@ -238,7 +257,8 @@ Now try to paste the second dataframe to the first one, using `rbind()`.
 
 ```{r}
 # Here your code
-
+data1_1a_rbind <- rbind(data1, data1a)
+data1_1a_rbind
 
 ```
 
@@ -296,6 +316,15 @@ _hint_: You could use `filter()`, however in this case `slice()` could be a good
 ```{r}
 
 # Here your code
+OECD_Health_Statistics_2020_Frequently_Requested_Data <- read_excel("../sourcedata/OECD-Health-Statistics-2020-Frequently-Requested-Data.xls", 
+    sheet = "Curr exp, per capita US$PPP", skip = 3, n_max = 39)
+
+colnames(OECD_Health_Statistics_2020_Frequently_Requested_Data)[1] <- "Country"
+colnames(OECD_Health_Statistics_2020_Frequently_Requested_Data)[colnames(OECD_Health_Statistics_2020_Frequently_Requested_Data) == "2019...51"] <- "2019"
+
+data1 <- OECD_Health_Statistics_2020_Frequently_Requested_Data %>% 
+  select(c("Country", "2011":"2019")) %>% 
+  slice(1:5)
 
 
 ```
@@ -341,7 +370,7 @@ _hint_: Remember that colum names with numbers should be written as `2011` to pr
 ```{r}
 
 # Here your code
-
+df2 <- data1 %>% pivot_longer(cols = "2011":"2019", names_to = "Year", values_to = "Expenditure")
 
 ```
 
@@ -385,7 +414,13 @@ Don't forget change the labels and the x-axis and choose a theme of your liking.
 
 ```{r}
 # Here your code
+df2$Year <- as.integer(df2$Year)
 
+ggplot() +
+  geom_line(data = df2, aes(x = Year, y = Expenditure, color = Country)) +
+  scale_x_continuous(breaks = c(2011:2019)) +
+  labs(x = "", y = "Expenditure per capita in PPP", legend = "Country") +
+  theme_bw()
 
 ```
 
@@ -402,7 +437,7 @@ Make a new data frame df3, based on df2 with only the observations of the year 2
 ```{r}
 
 # Here your code
-
+df3 <- subset(df2, Year %in% c(2018, 2019))
 
 ```
 
@@ -430,7 +465,7 @@ Make a new wide data frame df4 which looks like table above based on the long da
 
 ```{r}
 # Here your code
-
+df4 <- df3 %>% pivot_wider(names_from = "Year", values_from = "Expenditure")
 
 
 ```
@@ -446,7 +481,7 @@ _hint_ note the `` around the variable names.
 
 ```{r}
 # Here your code
-
+df4 <- df4 %>% mutate("Growth" = ((`2019` - `2018`)/`2018`))
 
 ```
 
@@ -461,7 +496,13 @@ Recreate this plot:
 
 ```{r}
 # Here your code
-
+ggplot() +
+  geom_bar(data = df4, aes(x = reorder(Country, desc(Growth)), fill = Country, weight = Growth)) +
+  labs(x = "", y = "Growth") + 
+  theme(legend.position = "none") +
+  theme_bw()
+  
+  
 
 
 ```
