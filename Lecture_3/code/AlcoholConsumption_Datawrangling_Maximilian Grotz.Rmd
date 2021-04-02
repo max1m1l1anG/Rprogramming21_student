@@ -1,0 +1,41 @@
+---
+title: "Alcohol consumption - Basic OECD Analysis"
+author: "Maximilian Grotz"
+date: "11 3 2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Import libraries and data
+
+
+```{r cars}
+library(readxl)
+library(tidyverse)
+library(ggrepel)
+
+AlcConsum <- read_excel("../sourcedata/OECD-Health-Statistics-2020-Frequently-Requested-Data.xls", 
+    sheet = "Alcohol consumption", na = "..", 
+    n_max = 41, skip = 3)
+colnames(AlcConsum)[1] = "countries"
+
+
+
+
+```
+
+## Graph for overview
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+ggplot() +
+  geom_line(data = OECD_Health_Statistics_2020_Frequently_Requested_Data, aes(x = ))
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
