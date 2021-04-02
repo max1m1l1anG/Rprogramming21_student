@@ -11,9 +11,10 @@ We need a package to read in the excel files. I tend to make a Package section i
 
 
 
-```{r}
+```{r warning = FALSE, message = FALSE}
 # Here your code
-
+library(readxl)
+library(tidyverse)
 
 ```
 
@@ -66,7 +67,7 @@ Assignment: read in the file "voetbal.csv" from the folder sourcedata and call t
 
 ```{r}
 # Here your code
-
+football <- read.csv2("../sourcedata/voetbal.csv")
 
 ```
 
@@ -78,7 +79,7 @@ By typing `football` we can view the data. Try to view the data.
 
 ```{r}
 # Here your code
-
+football
 
 ```
 
@@ -90,15 +91,14 @@ To just get an impression of the data frame we could either use `head(name of th
 
 ```{r}
 # Here your code
-
+head(football)
 
 ```
 
 
 ```{r}
 # Here your code
-
-
+tail(football)
 
 ```
 
@@ -114,7 +114,7 @@ Try to read in the `N1.csv` as done above and call the dataframe football1 (we h
 
 ```{r}
 # Here your code
-
+football1 <- read.csv2("../sourcedata/N1.csv")
 
 ```
 
@@ -126,7 +126,7 @@ And have a look at the data with `head(football1)`
 ```{r}
 
 # Here your code
-
+head(football1)
 
 
 ```
@@ -155,14 +155,14 @@ and view the data if it looks correct.
 
 ```{r}
 # Here your code
-
+football2 <- read.csv("../sourcedata/N1.csv", sep=",")
 
 ```
 
 
 ```{r}
 # Here your code
-
+head(football2)
 
 ```
 
@@ -179,7 +179,7 @@ Try to google how to read in the excel file *football.xlsx* in the folder source
 
 ```{r}
 # Here your code
-
+football_points <- read_excel("../sourcedata/football.xlsx")
 ```
 
 
@@ -190,7 +190,7 @@ Looking at the data, we see that the _Excel_ sheet is read in to a dataframe inc
 
 ```{r}
 # Here your code
-
+football_points <- read_excel("../sourcedata/football.xlsx", skip = 3)
 
 ```
 
@@ -239,7 +239,7 @@ First, read in *gender.csv* from the folder *sourcedata* as a dataframe with the
 
 ```{r}
 # Here your code
-
+gender <- read.csv("../sourcedata/gender.csv", sep=";")
 ```
 
 
@@ -248,7 +248,7 @@ and then check the structure of the dataframe `gender`
 
 ```{r}
 # Here your code
-
+str(gender)
 ```
 
 
@@ -278,7 +278,7 @@ By using `str()` again we can check if we succeeded:
 
 ```{r}
 # Here your code
-
+str(gender)
 
 ```
 
@@ -296,12 +296,12 @@ and then check the structure of your data and view the data
 
 ```{r}
 # Here your code
-
+gender$Number1 <- as.numeric(gender$Number)
 ```
 
 ```{r}
 # Here your code
-
+str(gender)
 
 ```
 
