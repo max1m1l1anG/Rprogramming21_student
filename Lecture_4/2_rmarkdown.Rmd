@@ -1,8 +1,10 @@
 ---
 title: "Lecture 4"
 author: "Misja Mikkers and Gertjan Verhoeven"
-subtitle: "R Markdown: reproducible presentations & reports from R"
-output: html_notebook
+subtitle: 'R Markdown: reproducible presentations & reports from R'
+output:
+  html_document:
+    df_print: paged
 urlcolor: blue
 ---
 
