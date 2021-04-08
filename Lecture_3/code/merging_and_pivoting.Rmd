@@ -1,7 +1,9 @@
 ---
-title: "Data wrangling: merging and pivoting"
+title: 'Data wrangling: merging and pivoting'
 author: "Misja Mikkers and Gertjan Verhoeven"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 
@@ -19,6 +21,8 @@ Load these packages:
 
 ```{r}
 # Here your code
+library(tidyverse)
+library(readxl)
 
 ```
 
@@ -95,6 +99,9 @@ Try to do this and look at the result:
 
 ```{r}
 # Here your code
+data12_merge <- merge(data1, data2, by = "Hospital")
+
+data12_merge
 
 ```
 
@@ -112,8 +119,8 @@ Try `merged_dataframe <- full_join(your_first_data_frame, your_second_dataframe,
 
 ```{r}
 # Here your code
-
-
+data12_fulljoin <- full_join(data1, data2, by = "Hospital")
+data12_fulljoin
 ```
 
 
@@ -127,7 +134,8 @@ Now try the command  `inner_join()` and inspect the results:
 
 ```{r}
 # Here your code
-
+data12_innerjoin <- inner_join(data1, data2, by = "Hospital")
+data12_innerjoin
 ```
 
 
@@ -140,8 +148,8 @@ Inspect the results of `left_join()` and try to see what happens if you change t
 
 ```{r}
 # Here your code
-
-
+data12_leftjoin <- left_join(data1, data2, by = "Hospital")
+data12_leftjoin
 ```
 
 
@@ -152,7 +160,8 @@ Try `right_join()` as the mirror of `left_join()` and inspect the result.
 
 ```{r}
 # Here your code
-
+data12_rightjoin <- right_join(data1, data2, by = "Hospital")
+data12_rightjoin
 
 ```
 
@@ -169,7 +178,8 @@ Inspect the results of `anti_join()`
 
 ```{r}
 # Here your code
-
+data12_antijoin <- anti_join(data1, data2, by = "Hospital")
+data12_antijoin
 
 ```
 
@@ -184,8 +194,8 @@ The `semi_join()` command returns all hospitals present in the first and the sec
 ```{r}
 
 # Here your code
-
-
+data12_semijoin <- semi_join(data1, data2, by = "Hospital")
+data12_semijoin
 ```
 
 
@@ -212,8 +222,8 @@ And now try to use `name_of_your_merged_dataframe <- cbind(data1, data2a)`
 
 ```{r}
 # Here your code
-
-
+data12_cbind <- cbind(data1, data2)
+data12_cbind
 ```
 
 
@@ -238,8 +248,8 @@ Now try to paste the second dataframe to the first one, using `rbind()`.
 
 ```{r}
 # Here your code
-
-
+data12_rbind <- rbind(data1a, data1)
+data12_rbind
 ```
 
 
@@ -296,7 +306,17 @@ _hint_: You could use `filter()`, however in this case `slice()` could be a good
 ```{r}
 
 # Here your code
+df1 <- read_excel("~/BSc Economics - TiU/Semester 2/Programming in R and Python/Assignments/R/Programming21_student_V2/Rprogramming21_student/Lecture_3/sourcedata/OECD-Health-Statistics-2020-Frequently-Requested-Data.xls", 
+    sheet = 3, 
+    skip = 3)
+colnames(df1)[colnames(df1) == "...1"] <- "Country"
+colnames(df1)[colnames(df1) == "2019...51"] <- "2019"
+colnames(df1)[colnames(df1) == "2019...53"] <- "2019"
+colnames(df1)[colnames(df1) == "...52"] <- ""
 
+df1 <- df1 %>%
+  select(c("Country", "2011":"2019")) %>%
+  slice(1:5)
 
 ```
 
@@ -341,7 +361,7 @@ _hint_: Remember that colum names with numbers should be written as `2011` to pr
 ```{r}
 
 # Here your code
-
+df2 <- pivot_longer(df1, cols = -Country, names_to = "Year", values_to = "Expenditure")
 
 ```
 
@@ -385,7 +405,11 @@ Don't forget change the labels and the x-axis and choose a theme of your liking.
 
 ```{r}
 # Here your code
-
+ggplot() +
+  geom_line(data = df2, aes(x = as.integer(Year), y = Expenditure, color = Country)) +
+  scale_x_continuous(breaks = 2011:2019) +
+  labs(x = "", y = "Expenditure per Capita in PPP") +
+  theme_bw()
 
 ```
 
@@ -402,7 +426,8 @@ Make a new data frame df3, based on df2 with only the observations of the year 2
 ```{r}
 
 # Here your code
-
+df3 <- df2 %>%
+  filter(Year %in% c(2018, 2019))
 
 ```
 
@@ -430,7 +455,7 @@ Make a new wide data frame df4 which looks like table above based on the long da
 
 ```{r}
 # Here your code
-
+df3 <- pivot_wider(df3, names_from = Year, values_from = Expenditure)
 
 
 ```
@@ -446,7 +471,8 @@ _hint_ note the `` around the variable names.
 
 ```{r}
 # Here your code
-
+df3 <- df3 %>%
+  mutate(Growth = (`2019` - `2018`)/`2018`)
 
 ```
 
@@ -461,7 +487,11 @@ Recreate this plot:
 
 ```{r}
 # Here your code
-
+ggplot() +
+  geom_col(data = df3, aes(x = reorder(Country, -Growth), y = Growth, fill = Country), show.legend = FALSE) +
+  labs(x = "", y = "Growth") +
+  theme_bw()
+  
 
 
 ```
