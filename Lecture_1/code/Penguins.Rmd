@@ -1,8 +1,10 @@
 ---
 title: "Lecture 1"
-subtitle: "Penguins visualisation"
 author: "Misja Mikkers and Gertjan Verhoeven"
-output: html_notebook
+subtitle: Penguins visualisation
+output:
+  html_document:
+    df_print: paged
 ---
 
 # Introduction
@@ -29,6 +31,8 @@ This error message means that you did not install the package `palmerpenguins`. 
 
 ```{r}
 # Your code here
+library(palmerpenguins)
+library(tidyverse)
 
 ```
 
@@ -66,6 +70,7 @@ The dataset contains 8 variables about 344 individual penguins. If you want to k
 
 ```{r}
 # Your code here to explore the penguins dataset
+?penguins
 
 ```
 
@@ -86,6 +91,8 @@ we get rid of the NA's. You should recognize the "pipe operator" `%>%` from the 
 ```{r}
 
 # Your code here
+penguins <- penguins %>%
+  na.omit
 
 ```
 
@@ -150,6 +157,8 @@ In that case we can plot the data as a scatterplot (`geom_point()`)with
 
 ```{r}
 # Here your code
+ggplot() +
+  geom_point(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm))
 
 ```
 
@@ -166,7 +175,8 @@ We could experiment a bit with adding colors and shapes to this plot by trying t
 ```{r}
 
 # Here your code
-
+ggplot() + 
+  geom_point(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm), color = "red", size = 3, shape = 1)
 
 ```
 
@@ -181,6 +191,8 @@ It seems that there is a positive correlation between flipper length and bill le
 
 ```{r}
 # Here your code
+ggplot() + 
+  geom_point(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm, color = species, shape = sex))
 
 ```
 
@@ -202,10 +214,13 @@ Finally,  we can add a theme (you can find some examples at https://ggplot2.tidy
 ```{r}
 
 # Here your code
-
-```
-
-
+ggplot() +
+  geom_point(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm, shape = sex, color = species)) +
+  labs(title="Penguin Flipper and Bill length", subtitle = "Plot by me", caption = "Source: Penguins") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Flippel length") +
+  ylab("Bill length")
+``` 
 # Boxplots
 
 
@@ -218,7 +233,13 @@ To make a boxplot:
 - with a fill for sex (so you will have different "boxes" for each sex)
 - change the label on the y-axis to "body mass in grams")
 
+```{r}
+#Here your code for boxplot
+ggplot() +
+  geom_boxplot(data = penguins, aes(x = species, y = body_mass_g, fill = sex)) +
+  ylab("body mass in grams")
 
+```
 
 
 
@@ -231,7 +252,10 @@ We can split the plots per island by using for example
 
 ```{r}
 # Here your code
-
+ggplot() +
+  geom_boxplot(data = penguins, aes(x = species, y = body_mass_g, fill = sex)) +
+  ylab("body mass in grams") +
+  facet_wrap(~ island)
 
 ```
 
@@ -255,7 +279,11 @@ _hint_: Why does scale_color_manual not work?
 
 ```{r}
 # Here your code
-
+ggplot() +
+  geom_boxplot(data = penguins, aes(x = species, y = body_mass_g, fill = sex)) +
+  ylab("body mass in grams") +
+  facet_wrap(~ island) +
+  scale_fill_manual(values = c("female" = "mediumblue", "male" = "#DA020E"))
 
 ```
 
