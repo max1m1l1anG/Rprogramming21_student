@@ -1,8 +1,10 @@
 ---
 title: "Lecture 5"
-subtitle: "Simulation-based Statistics"
 author: "Misja Mikkers and Gertjan Verhoeven"
-output: html_notebook
+subtitle: Simulation-based Statistics
+output:
+  html_document:
+    df_print: paged
 ---
 
 # Packages
@@ -52,11 +54,21 @@ Finally, calculate the mean height by sex group.
 
 ```{r}
 # your code here
+ggplot() +
+  geom_histogram(data = df, aes(height))
+
+ggplot() +
+  geom_histogram(data = df, aes(x = height)) +
+  facet_wrap(~sex)
+
+mean_heights <- df %>%
+  group_by(sex) %>%
+  summarise(mean = mean(height))
 ```
 
 
 
-So we find a difference. But can we now conclude that female students are on average taller then male students (in the hallway of our university building)? 
+So we find a difference. But can we now conclude that female students are on average taller than male students (in the hallway of our university building)? 
 
 To do so, we need a statistical model.
 
@@ -90,6 +102,14 @@ Use the `sd()` function.
 
 ```{r}
 # your code here
+
+df %>%
+  group_by(sex) %>%
+  summarise(mean = mean(height), sd = sd(height))
+
+df %>% 
+  summarise(mean = mean(height), sd = sd(height))
+
 ```
 
 
@@ -107,8 +127,14 @@ Finally, plot a histogram of these 10.000 numbers. Play around with the number o
 
 ```{r}
 set.seed(123)
+rand_norm <- rnorm(10000, 181, 10)
 
+
+ggplot() +
+  geom_histogram(aes(x = rand_norm), bins = 70)
 # your code here
+
+
 ```
 
 
@@ -132,7 +158,7 @@ Calculate the mean for these 10 datapoints.
 
 ```{r}
 set.seed(123)
-
+mean(rnorm(10, 181, 10))
 # your code here
 ```
 
@@ -149,9 +175,12 @@ Plot a histogram with these 10000 means.
 # your code here
 mean_vals <- c()
 
-for (i in ...){
-  mean_vals[i] <- mean(...)
+for (i in 1:10000){
+  mean_vals[i] <- mean(rnorm(10, 180, 10))
 }
+
+ggplot() +
+  geom_histogram(aes(x = mean_vals))
 ```
 
 
@@ -170,6 +199,10 @@ use `geom_vline()` for this.
 
 ```{r}
 # your code here
+ggplot() +
+  geom_histogram(aes(x = mean_vals)) +
+  geom_vline(xintercept = mean_heights$mean, color = "red")
+
 ```
 
 
